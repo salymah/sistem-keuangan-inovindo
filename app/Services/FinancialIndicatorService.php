@@ -26,6 +26,7 @@ class FinancialIndicatorService
         $omset = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'omset'))->sum('jumlah');
         $hpp = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'hpp'))->sum('jumlah');
         $operasional = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'operasional'))->sum('jumlah');
+        $pajak = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'beban_pajak'))->sum('jumlah');
         $nonOperasional = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'non_operasional'))->sum('jumlah');
         $depresiasi = (clone $query())->whereHas('kategori', fn ($q) => $q->where('kelompok', 'depresiasi'))->sum('jumlah');
 
@@ -33,8 +34,8 @@ class FinancialIndicatorService
         $totalPengeluaran = (clone $query())->whereHas('kategori', fn ($q) => $q->where('jenis', 'pengeluaran'))->sum('jumlah');
 
         $grossProfit = $omset - $hpp;
-        $netProfit = $grossProfit - $operasional - $nonOperasional - $depresiasi;
-        $ebitda = $netProfit + $depresiasi;
+        $ebitda = $grossProfit - $operasional;
+        $netProfit = $ebitda - $pajak - $nonOperasional - $depresiasi;
         $cashFlow = $totalPemasukan - $totalPengeluaran;
 
         $mrr = (clone $query())

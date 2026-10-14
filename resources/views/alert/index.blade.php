@@ -3,7 +3,7 @@
 @section('title', 'Pengaturan Alert')
 
 @section('content')
-<div class="card mb-4" style="max-width: 520px;">
+<div class="card mb-4" style="max-width: 1200px;">
     <div class="card-body">
         <h6 class="fw-bold mb-3 d-flex align-items-center">
             <span class="card-header-icon"><i class="bi bi-bell"></i></span>
@@ -29,11 +29,11 @@
             Riwayat Notifikasi Terkirim
         </h6>
         @forelse ($notifikasis as $n)
-            <div class="border rounded p-3 mb-2 d-flex align-items-start">
+            <div class="border rounded p-4 mb-2 d-flex align-items-start">
                 <i class="bi bi-exclamation-triangle-fill text-danger me-2 mt-1"></i>
                 <div>
                     <div class="small">{{ $n->pesan }}</div>
-                    <div class="text-muted" style="font-size: .75rem;">
+                    <div class="text-muted" style="font-size: .80rem;">
                         <i class="bi bi-calendar3"></i> {{ $n->terkirim_at->format('d-m-Y H:i') }}
                     </div>
                 </div>

@@ -123,14 +123,31 @@
                 </a>
             @endif
 
+            
+            {{-- Riwayat Transaksi bisa dilihat Owner dan Finance --}}
+            @if (Route::has('transaksi.index'))
+                <a class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}"
+                href="{{ route('transaksi.index') }}">
+                    <i class="bi bi-clock-history"></i> Riwayat Transaksi
+                </a>
+            @endif
+
+
             @if (auth()->user()->isFinance())
-                @if (Route::has('transaksi.create'))
-                    <a class="nav-link {{ request()->routeIs('transaksi.create') ? 'active' : '' }}" href="{{ route('transaksi.create') }}">
-                        <i class="bi bi-plus-circle"></i> Input Transaksi
+                @if (Route::has('transaksi.create-pemasukan'))
+                    <a class="nav-link {{ request()->routeIs('transaksi.create-pemasukan') ? 'active' : '' }}" href="{{ route('transaksi.create-pemasukan') }}">
+                        <i class="bi bi-arrow-down-circle text-success"></i> Input Pemasukan
                     </a>
                 @endif
+                @if (Route::has('transaksi.create-pengeluaran'))
+                    <a class="nav-link {{ request()->routeIs('transaksi.create-pengeluaran') ? 'active' : '' }}" href="{{ route('transaksi.create-pengeluaran') }}">
+                        <i class="bi bi-arrow-up-circle text-danger"></i> Input Pengeluaran
+                    </a>
+                @endif
+                {{-- Riwayat transaksi bisa dilihat Owner dan Finance --}}
                 @if (Route::has('transaksi.index'))
-                    <a class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}" href="{{ route('transaksi.index') }}">
+                    <a class="nav-link {{ request()->routeIs('transaksi.index') ? 'active' : '' }}"
+                    href="{{ route('transaksi.index') }}">
                         <i class="bi bi-clock-history"></i> Riwayat Transaksi
                     </a>
                 @endif

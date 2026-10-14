@@ -36,7 +36,22 @@
                     <td>{{ $t->tipe === 'recurring' ? 'Recurring' : 'One-time' }}</td>
                 </tr>
             @endforeach
-        </tbody>
+                </tbody>
+    </table>
+
+    <table style="margin-top: 15px; width: 300px; margin-left: auto;">
+        <tr>
+            <td><strong>Total Pemasukan</strong></td>
+            <td style="text-align: right;">Rp {{ number_format($total['pemasukan'], 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td><strong>Total Pengeluaran</strong></td>
+            <td style="text-align: right;">Rp {{ number_format($total['pengeluaran'], 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td><strong>Selisih (Laba/Rugi)</strong></td>
+            <td style="text-align: right; font-weight: bold;">Rp {{ number_format($total['selisih'], 0, ',', '.') }}</td>
+        </tr>
     </table>
 </body>
 </html>

@@ -61,17 +61,38 @@
                         {{ $t->tipe === 'recurring' ? 'Recurring' : 'One-time' }}
                     </span>
                 </td>
-                                <td>
+            
+                <td>
+                    {{-- Owner dan Finance boleh melihat bukti transaksi --}}
                     @if ($t->bukti_transaksi)
-                        <a href="{{ Storage::url($t->bukti_transaksi) }}" target="_blank" class="btn btn-sm btn-outline-secondary">Bukti</a>
+                        <a href="{{ Storage::url($t->bukti_transaksi) }}"
+                        target="_blank"
+                        class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-file-earmark-image"></i> Bukti
+                        </a>
                     @endif
-                    <a href="{{ route('transaksi.edit', $t) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <form method="POST" action="{{ route('transaksi.destroy', $t) }}" class="d-inline" onsubmit="return confirm('Hapus transaksi ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger">Hapus</button>
-                    </form>
+
+                    {{-- Hanya Finance yang boleh mengedit dan menghapus --}}
+                    @if (auth()->user()->isFinance())
+                        <a href="{{ route('transaksi.edit', $t) }}"
+                        class="btn btn-sm btn-outline-primary">
+                            Edit
+                        </a>
+
+                        <form method="POST"
+                            action="{{ route('transaksi.destroy', $t) }}"
+                            class="d-inline"
+                            onsubmit="return confirm('Hapus transaksi ini?')">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                Hapus
+                            </button>
+                        </form>
+                    @endif
                 </td>
+
             </tr>
         @empty
             <tr>

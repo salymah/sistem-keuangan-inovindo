@@ -50,12 +50,188 @@
                     </span>
                 </td>
                 <td>
-                    <form method="POST" action="{{ route('kategori.destroy', $kategori) }}" class="d-inline" onsubmit="return confirm('Hapus kategori ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus</button>
-                    </form>
-                </td>
+    <!-- Tombol Edit -->
+    <button
+        class="btn btn-sm btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEditKategori{{ $kategori->getKey() }}"
+    >
+        <i class="bi bi-pencil"></i> Edit
+    </button>
+
+    <!-- Tombol Hapus -->
+    <form
+        method="POST"
+        action="{{ route('kategori.destroy', $kategori) }}"
+        class="d-inline"
+        onsubmit="return confirm('Hapus kategori ini?')"
+    >
+        @csrf
+        @method('DELETE')
+
+        <button class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i> Hapus
+        </button>
+    </form>
+
+    <!-- Modal Edit Kategori -->
+    <div
+        class="modal fade"
+        id="modalEditKategori{{ $kategori->getKey() }}"
+        tabindex="-1"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <form
+                    method="POST"
+                    action="{{ route('kategori.update', $kategori) }}"
+                >
+                    @csrf
+                    @method('PUT')
+
+                    <div class="modal-header">
+                        <h6 class="modal-title fw-bold d-flex align-items-center">
+                            <span class="card-header-icon">
+                                <i class="bi bi-pencil"></i>
+                            </span>
+                            Edit Kategori
+                        </h6>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                        ></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- Nama Kategori -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-tag"></i>
+                                Nama Kategori
+                            </label>
+
+                            <input
+                                type="text"
+                                name="nama_kategori"
+                                class="form-control"
+                                value="{{ $kategori->nama_kategori }}"
+                                required
+                            >
+                        </div>
+
+                        <!-- Jenis -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-arrow-left-right"></i>
+                                Jenis
+                            </label>
+
+                            <select
+                                name="jenis"
+                                class="form-select"
+                                required
+                            >
+                                <option
+                                    value="pemasukan"
+                                    {{ $kategori->jenis === 'pemasukan' ? 'selected' : '' }}
+                                >
+                                    Pemasukan
+                                </option>
+
+                                <option
+                                    value="pengeluaran"
+                                    {{ $kategori->jenis === 'pengeluaran' ? 'selected' : '' }}
+                                >
+                                    Pengeluaran
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Kelompok -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-diagram-3"></i>
+                                Kelompok Kategori
+                            </label>
+
+                            <select
+                                name="kelompok"
+                                class="form-select"
+                                required
+                            >
+                                <option
+                                    value="omset"
+                                    {{ $kategori->kelompok === 'omset' ? 'selected' : '' }}
+                                >
+                                    Omset
+                                </option>
+
+                                <option
+                                    value="hpp"
+                                    {{ $kategori->kelompok === 'hpp' ? 'selected' : '' }}
+                                >
+                                    HPP
+                                </option>
+
+                                <option
+                                    value="operasional"
+                                    {{ $kategori->kelompok === 'operasional' ? 'selected' : '' }}
+                                >
+                                    Beban Operasional
+                                </option>
+
+                                <option
+                                    value="non_operasional"
+                                    {{ $kategori->kelompok === 'non_operasional' ? 'selected' : '' }}
+                                >
+                                    Beban Non Operasional
+                                </option>
+
+                                <option
+                                    value="pajak"
+                                    {{ $kategori->kelompok === 'pajak' ? 'selected' : '' }}
+                                >
+                                    Pajak
+                                </option>
+
+                                <option
+                                    value="depresiasi"
+                                    {{ $kategori->kelompok === 'depresiasi' ? 'selected' : '' }}
+                                >
+                                    Depresiasi
+                                </option>
+
+                                <option
+                                    value="lainnya"
+                                    {{ $kategori->kelompok === 'lainnya' ? 'selected' : '' }}
+                                >
+                                    Lainnya
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="submit"
+                            class="btn btn-dark"
+                        >
+                            <i class="bi bi-check-circle me-1"></i>
+                            SIMPAN
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</td>
             </tr>
         @empty
             <tr>

@@ -24,15 +24,48 @@
         @forelse ($proyeks as $proyek)
             <tr>
                 <td>
-                    <i class="bi bi-briefcase-fill text-primary me-2"></i>
-                    {{ $proyek->nama_proyek }}
+                    <a href="{{ route('proyek.show', $proyek) }}" class="text-decoration-none">
+                        <i class="bi bi-briefcase-fill text-primary me-2"></i>
+                        {{ $proyek->nama_proyek }}
+                    </a>
                 </td>
-                <td>
+                                <td>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $proyek->id_proyek }}">
+                        <i class="bi bi-pencil"></i> Edit
+                    </button>
                     <form method="POST" action="{{ route('proyek.destroy', $proyek) }}" class="d-inline" onsubmit="return confirm('Hapus proyek ini?')">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus</button>
                     </form>
+
+                    <!-- Modal Edit Proyek -->
+                    <div class="modal fade" id="modalEdit{{ $proyek->id_proyek }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST" action="{{ route('proyek.update', $proyek) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="modal-header">
+                                        <h6 class="modal-title fw-bold d-flex align-items-center">
+                                            <span class="card-header-icon"><i class="bi bi-pencil"></i></span>
+                                            Edit Proyek
+                                        </h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label"><i class="bi bi-briefcase"></i>Nama Proyek</label>
+                                            <input type="text" name="nama_proyek" class="form-control" value="{{ $proyek->nama_proyek }}" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-dark"><i class="bi bi-check-circle me-1"></i>SIMPAN</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         @empty

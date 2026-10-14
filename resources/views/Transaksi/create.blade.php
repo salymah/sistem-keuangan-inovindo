@@ -14,13 +14,25 @@
             @csrf
 
             <div class="row g-3">
+                <                <div class="col-md-6">
+                    <label class="form-label"><i class="bi bi-arrow-down-circle text-success"></i>Kategori Pemasukan</label>
+                    <select name="kategori_pemasukan_id" class="form-select">
+                        <option value="">-- Tidak dipilih --</option>
+                        @foreach ($kategoriPemasukan as $kategori)
+                            <option value="{{ $kategori->id_kategori }}" @selected(old('kategori_pemasukan_id') == $kategori->id_kategori)>
+                                {{ $kategori->nama_kategori }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="col-md-6">
-                    <label class="form-label"><i class="bi bi-tags"></i>Kategori</label>
-                    <select name="kategori_id" class="form-select" required>
-                        <option value="">-- Pilih Kategori --</option>
-                        @foreach ($kategoris as $kategori)
-                            <option value="{{ $kategori->id_kategori }}" @selected(old('kategori_id') == $kategori->id_kategori)>
-                                {{ $kategori->nama_kategori }} ({{ $kategori->jenis }})
+                    <label class="form-label"><i class="bi bi-arrow-up-circle text-danger"></i>Kategori Pengeluaran</label>
+                    <select name="kategori_pengeluaran_id" class="form-select">
+                        <option value="">-- Tidak dipilih --</option>
+                        @foreach ($kategoriPengeluaran as $kategori)
+                            <option value="{{ $kategori->id_kategori }}" @selected(old('kategori_pengeluaran_id') == $kategori->id_kategori)>
+                                {{ $kategori->nama_kategori }}
                             </option>
                         @endforeach
                     </select>

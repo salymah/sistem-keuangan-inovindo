@@ -55,7 +55,7 @@
     <div class="col-md-4">
         <div class="card-metric d-flex justify-content-between align-items-start">
             <div>
-                <div class="label">ROI Avg</div>
+                <div class="label">ROI Avg (Rasio Keuntungan)</div>
                 <div class="value {{ $indikator['roi_avg'] > 0 ? 'positive' : ($indikator['roi_avg'] < 0 ? 'negative' : '') }}">{{ $indikator['roi_avg'] }}%</div>
             </div>
             <div class="metric-icon"><i class="bi bi-percent"></i></div>
@@ -65,8 +65,17 @@
 
 <div class="card mb-4">
     <div class="card-body">
-        <h6 class="fw-bold mb-3">Grafik Tren (Cash Flow 6 Bulan Terakhir)</h6>
-        <canvas id="chartTren" height="90"></canvas>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Grafik Tren (Cash Flow)</h6>
+            <select id="filterPeriode" class="form-select form-select-sm" style="width: auto;">
+                <option value="3" {{ $jumlahBulan == 3 ? 'selected' : '' }}>3 Bulan Terakhir</option>
+                <option value="6" {{ $jumlahBulan == 6 ? 'selected' : '' }}>6 Bulan Terakhir</option>
+                <option value="12" {{ $jumlahBulan == 12 ? 'selected' : '' }}>12 Bulan Terakhir</option>
+            </select>
+        </div>
+        <div style="height: 360px;">
+    <canvas id="chartTren"></canvas>
+</div>
     </div>
 </div>
 
@@ -82,19 +91,167 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
 <script>
-    const ctx = document.getElementById('chartTren');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: @json($tren->pluck('label')),
-            datasets: [{
-                label: 'Cash Flow',
-                data: @json($tren->pluck('value')),
-                backgroundColor: '#adb5bd'
-            }]
+    document.getElementById('filterPeriode').addEventListener('change', function () {
+        window.location.href = '{{ route('dashboard') }}?periode=' + this.value;
+    });
+
+
+const ctx = document.getElementById('chartTren');
+
+const labels = @json($tren->pluck('label'));
+const values = @json($tren->pluck('value'));
+
+// Format angka ke Rupiah
+function formatRupiah(value) {
+    return 'Rp ' + Number(value).toLocaleString('id-ID');
+}
+
+// Warna batang berdasarkan Cash Flow
+function getBarColor(value) {
+    if (value > 0) {
+        return 'rgba(25, 135, 84, 0.75)';
+    }
+
+    if (value < 0) {
+        return 'rgba(220, 53, 69, 0.75)';
+    }
+
+    return 'rgba(108, 117, 125, 0.45)';
+}
+
+function getBorderColor(value) {
+    if (value > 0) {
+        return '#198754';
+    }
+
+    if (value < 0) {
+        return '#dc3545';
+    }
+
+    return '#6c757d';
+}
+
+new Chart(ctx, {
+    type: 'bar',
+
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Cash Flow',
+            data: values,
+
+            backgroundColor: function(context) {
+                return getBarColor(context.raw);
+            },
+
+            borderColor: function(context) {
+                return getBorderColor(context.raw);
+            },
+
+            borderWidth: 1,
+            borderRadius: 8,
+            borderSkipped: false,
+            barPercentage: 0.70,
+            categoryPercentage: 0.6
+            
+        }]
+    },
+
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        animation: {
+            duration: 900,
+            easing: 'easeOutQuart'
         },
-        options: { plugins: { legend: { display: false } } }
+
+        plugins: {
+            legend: {
+                display: false
+            },
+
+            tooltip: {
+                backgroundColor: '#212529',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                padding: 12,
+                cornerRadius: 8,
+
+                callbacks: {
+                    title: function(context) {
+                        return context[0].label;
+                    },
+
+                    label: function(context) {
+                        return ' Cash Flow: ' +
+                            formatRupiah(context.raw);
+                    }
+                }
+            }
+        },
+
+        scales: {
+            x: {
+                grid: {
+                    display: false
+                },
+
+                border: {
+                    display: false
+                },
+
+                ticks: {
+                    color: '#6c757d',
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+
+            y: {
+                beginAtZero: true,
+
+                border: {
+                    display: false
+                },
+
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.07)',
+                    drawTicks: false
+                },
+
+                ticks: {
+                    color: '#6c757d',
+                    padding: 10,
+
+                    font: {
+                        size: 11
+                    },
+
+                    callback: function(value) {
+                        if (Math.abs(value) >= 1000000) {
+                            return 'Rp ' +
+                                (value / 1000000)
+                                .toLocaleString('id-ID') + ' jt';
+                        }
+
+                        if (Math.abs(value) >= 1000) {
+                            return 'Rp ' +
+                                (value / 1000)
+                                .toLocaleString('id-ID') + ' rb';
+                        }
+
+                        return 'Rp ' +
+                            value.toLocaleString('id-ID');
+                    }
+                }
+            }
+        }
+    }
     });
 </script>
 @endsection
+

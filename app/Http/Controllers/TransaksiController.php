@@ -34,15 +34,23 @@ class TransaksiController extends Controller
         ]);
     }
 
-    public function create()
+            public function createPemasukan()
     {
-        return view('transaksi.create', [
-            'kategoris' => Kategori::orderBy('nama_kategori')->get(),
+        return view('transaksi.create-pemasukan', [
+            'kategoris' => Kategori::where('jenis', 'pemasukan')->orderBy('nama_kategori')->get(),
             'proyeks' => Proyek::orderBy('nama_proyek')->get(),
         ]);
     }
 
-    public function store(Request $request)
+    public function createPengeluaran()
+    {
+        return view('transaksi.create-pengeluaran', [
+            'kategoris' => Kategori::where('jenis', 'pengeluaran')->orderBy('nama_kategori')->get(),
+            'proyeks' => Proyek::orderBy('nama_proyek')->get(),
+        ]);
+    }
+
+           public function store(Request $request)
     {
         $data = $request->validate([
             'kategori_id' => 'required|exists:kategoris,id_kategori',

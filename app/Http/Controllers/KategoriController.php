@@ -27,6 +27,26 @@ class KategoriController extends Controller
         return back()->with('success', 'Kategori berhasil ditambahkan.');
     }
 
+    public function edit(Kategori $kategori)
+    {
+        return view('kategori.edit', compact('kategori'));
+    }
+
+    public function update(Request $request, Kategori $kategori)
+    {
+        $data = $request->validate([
+            'nama_kategori' => 'required|string|max:255',
+            'jenis' => 'required|in:pemasukan,pengeluaran',
+            'kelompok' => 'required|in:omset,hpp,operasional,non_operasional,pajak,depresiasi,lainnya',
+        ]);
+
+        $kategori->update($data);
+
+        return redirect()
+            ->route('kategori.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
+    }
+
     public function destroy(Kategori $kategori)
     {
         $kategori->delete();
